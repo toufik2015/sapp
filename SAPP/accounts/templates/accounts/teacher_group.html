@@ -1,0 +1,248 @@
+{% extends 'accounts/main.html' %}
+
+	{% block content %}
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+			
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+
+
+<style>
+	.hidden{
+        display:none;
+    }
+
+    .result{
+    	max-width:150px;
+    }
+    #gname{
+		font-family: sans-serif;
+		color: #6c757d;
+		font-weight:bold;
+	}
+
+
+
+</style>
+<div class="d-flex justify-content-center">
+	<div class="col-md-4">
+		<div  class="card card-body" >
+			<div class="d-flex justify-content-center">
+
+			<h3 id="gname">{{group.group_name}}</h3>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="row">
+
+	<div class="col-md-4"></div>
+
+	<div class="col-md-12">
+
+		<div class="card card-body">
+
+			
+			
+			<!-- Data Table -->
+			<table class="table table-dark">
+			  <thead>
+			    <tr>
+			      <th scope="col">Full Name</th>
+			      <th scope="col">Phone Number</th>
+
+			    </tr>
+			  </thead>
+			  <tbody id="students-table">
+
+			  </tbody>
+			</table>
+
+		</div>
+
+	</div>
+
+	<div class="col-md-4"></div>
+</div>
+
+
+<div class="d-flex justify-content-center">
+	<div class="col-md-4">
+		<div  class="card card-body" >
+			<div class="d-flex justify-content-center">
+
+			<a href="{% url 'teacher' %}"><button type="submit" class="btn btn-success" id="Sub_sessionbtn">Confirm</button></a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+
+
+
+	var attdId = 1
+	var newAttendance = {'name':null, 'last_name':null,'id':'student-${attdID}','phone':null }
+
+
+	
+
+	function addRow(obj){
+		var row = `<tr scope="row" class="student-row-${obj.id}">
+	    			   <td>${obj.name}</td>
+	                   <td>${obj.phone}</td>
+	                   <td>
+	                   		<button class="btn btn-sm btn-danger" data-studentid="${obj.id}" id="delete-${obj.id}">Absent</button>
+	                   		<button class="btn btn-sm btn-info"  data-studentid="${obj.id}" id="save-${obj.id}">Present</button> 
+	                   </td>
+	    		   </tr>`
+		$('#students-table').append(row)
+
+		$(`#save-${obj.id}`).on('click',saveUpdate)
+		$(`#delete-${obj.id}`).on('click',deleteTest)
+
+	}
+
+	$(`#Sub_sessionbtn`).on('click',Sub_session)
+
+
+	function attPresenPOST(data){
+		var url =  '/student_present/'
+
+		$.ajax({
+			method :'POST',
+			url:url,
+			data: data,
+			success:function(){
+
+			}	
+
+		})
+	}
+
+	function attAbsenPOST(data){
+		var url =  '/student_absent/'
+		$.ajax({
+			method : 'POST',
+			url:url,
+			data: data,
+			success:function(){
+				
+			}	
+
+		})
+
+		
+	}
+
+	
+
+
+
+	function sessionSubPOST(data){
+		var url =  '/sub_session/'
+		$.ajax({
+			method : 'POST',
+			url:url,
+			data: data,
+			success:function(){
+				
+			}	
+
+		})
+
+		
+	}
+	
+	
+
+	var students = []
+
+	var dataURL = '/studentslist/{{group.id}}'
+
+	$.ajax({
+		method:'GET',
+		url: dataURL,
+		success:function(response) {
+			students = response
+			
+
+			for (var i in students){
+				addRow(students[i])
+			}
+		}
+	})
+
+
+	
+	
+
+	function saveUpdate(){
+
+
+		var studentid = $(this).data('studentid')
+
+		var saveBtn = $(`#save-${studentid}`)
+		var deleteBtn = $(`#delete-${studentid}`)
+
+		saveBtn.addClass('disabled')
+		deleteBtn.addClass('hidden')
+
+		var data = {'id':studentid}
+
+		attPresenPOST(data)
+
+	}
+
+
+
+	function deleteTest(){
+
+
+		var studentid = $(this).data('studentid')
+
+		var saveBtn = $(`#save-${studentid}`)
+		var deleteBtn = $(`#delete-${studentid}`)
+
+		saveBtn.addClass('hidden')
+		deleteBtn.addClass('disabled')
+
+
+		var data = {'id':studentid}
+
+		attAbsenPOST(data)
+
+
+	}
+
+	var group_id = '{{group.id}}'
+
+	function Sub_session(){
+
+		var groupid = group_id
+		
+		
+
+		
+		var datag = {'id_g':groupid}
+
+		sessionSubPOST(datag)
+
+	}
+
+	
+</script>
+
+	{% endblock %}
+
+
+	

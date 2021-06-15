@@ -1,0 +1,84 @@
+{% extends 'accounts/main.html' %}
+
+	{% block content %}
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<style>
+    th{ 
+        color:#fff;
+            }
+</style>
+<div class="d-flex justify-content-center">
+	<div class="col-md-12">
+		<div class="card card-body">
+
+			<form method="get" class="form-inline">
+				<p>{{filtered_students.form.name}}</p>
+                <p>{{filtered_students.form.last_name}}</p>
+               <p> {{filtered_students.form.phone}}</p>
+               <p> {{filtered_students.form.email}}</p>
+               
+               <p><span>Registration Date From :</span> {{filtered_students.form.date_applied_gte}}</p>
+               <p><span>To</span> {{filtered_students.form.date_applied_lte}}</p>
+                <p><span>Level:</span>{{filtered_students.form.level}} <span>Educational Level:</span>
+                {{filtered_students.form.educ_level}} </p> 
+                <p><span>Status:</span>{{filtered_students.form.status}} <span>Category:</span>{{filtered_students.form.category}} </p>
+                  <hr>  
+          
+		    <button class="btn btn-primary" type="submit">Search</button>
+           
+		  </form>
+			
+		</div>
+	</div>
+</div>
+<div  class="d-flex justify-content-center">
+	<div class="col-md-12" >
+<table class="table table-striped">
+    <tr  class="bg-info">
+        <th>Name</th>
+        <th>Last Name</th>
+        <th>Phone</th>
+        <th>Category</th>
+        <th>Level</th>
+        <th>Status</th>
+        <th>Gender</th>
+        <th>Job</th>
+        <th>Date Registered</th>
+        <th>Assign Group</th>
+    </tr>
+    <tbody id="myTable">
+        {% for s in studentList %}
+    <tr>
+        <td>{{s.name}}</td>
+        <td>{{s.last_name}}</td>
+        <td>{{s.phone}}</td>
+        <td>{{s.category}}</td>
+        <td>{{s.level}}</td>
+        <td>{{s.status}}</td>
+        <td>{{s.sex}}</td>
+        <td>{{s.job}}</td>
+        <td>{{s.date_applied}}</td>
+        <td><a href="{% url 'assginstudent' s.id %}"><button type="button" class="btn btn-info">Assign</button></a> </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    
+    
+
+
+
+    
+        
+    
+</table>
+	</div>
+</div>
+
+
+	
+
+{% endblock %}
